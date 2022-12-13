@@ -8,7 +8,7 @@ namespace BadSyncProgram
 {
 	class Program
 	{
-		static string VersionString = "0.0.1";
+		static string VersionString = "0.1.0";
 		static string ProgramName = "BSProgram";
 		static int VerbosityLvl = 0;
 		static bool CompDoubleEntries = false;
@@ -49,28 +49,84 @@ namespace BadSyncProgram
 				Environment.Exit(0);
 			}
 
+			WriteYellowLine("Searching Files in Source Directory...");
 			FilesInSourceDir = GetAllFilesInDirectory(SourceDir, SourceDir.Length);
 			if(VerbosityLvl > 0)
 			{
-				WriteLine($"Found {FilesInSourceDir.Count} file(s) in Source directory");
+				WriteLine($"\nFound {FilesInSourceDir.Count} file(s) in Source directory");
 			}
+
+			WriteYellowLine("Searching Files in Destination Directory...");
 			FilesInDestDir = GetAllFilesInDirectory(DestDir, DestDir.Length);
 			if(VerbosityLvl > 0)
 			{
-				WriteLine($"Found {FilesInDestDir.Count} file(s) in Destination directory");
+				WriteLine($"\nFound {FilesInDestDir.Count} file(s) in Destination directory");
 			}
+
+			WriteYellowLine("Searching for files that exist in both directories...");
 			DoubleEntries = GetDoubleEntries(ref FilesInSourceDir, ref FilesInDestDir);
 			if(VerbosityLvl > 0)
 			{
-				WriteLine($"Found {DoubleEntries.Count} file(s) that are in both directories");
+				WriteLine($"\nFound {DoubleEntries.Count} file(s) that are in both directories");
 			}
 			if(CompDoubleEntries)
 			{
+				WriteYellowLine("Comparing duplicate files...");
 				DoubleEntries = CompareDoubleEntries(DoubleEntries);
 				if(VerbosityLvl > 0)
 				{
-					WriteLine($"Found {DoubleEntries.Count} file(s) that are in both dirs and different");
+					WriteLine($"\nFound {DoubleEntries.Count} file(s) that are in both dirs and different");
 				}
+			}
+			WriteYellowLine($"\nCopying {FilesInSourceDir.Count} Files...");
+			CopyFiles(FilesInSourceDir);
+		}
+
+		static void CreateSubDir(string filepath)
+		{
+			Directory.CreateDirectory(filepath.Substring(0, filepath.LastIndexOf('/')));
+		}
+		
+		static void CopyFiles(List<string> files)
+		{
+			int filesLength = files.Count;
+			WriteLine();
+			for(int i = 0; i < filesLength; i++)
+			{
+				CreateSubDir(DestDir + files[i]);
+				File.Copy(SourceDir + files[i], DestDir + files[i]);
+				if(VerbosityLvl > 2 && ShowProgress)
+				{
+					SetCursorPosition(0, CursorTop - 1);
+					Write($"Copying {files[i]}...");
+					for(int j = CursorLeft; j < WindowWidth; j++)
+					{
+						Write(' ');
+					}
+					Write($"\n{i * 100 / ((double)filesLength - 1)}%");
+					for(int j = CursorLeft; j < WindowWidth; j++)
+					{
+						Write(' ');
+					}
+				}
+				else if(ShowProgress)
+				{
+					SetCursorPosition(0, CursorTop);
+					Write($"{i * 100 / ((double)filesLength - 1)}%");
+				}
+				else if(VerbosityLvl > 2)
+				{
+					SetCursorPosition(0, CursorTop);
+					Write($"Copying {files[i]}...");
+				}
+			}
+		}
+
+		static void WriteSpaceToLineEnd()
+		{
+			for(int i = CursorLeft; i < WindowWidth - 1; i++)
+			{
+				Write(' ');
 			}
 		}
 
@@ -80,9 +136,25 @@ namespace BadSyncProgram
 			for(int i = 0; i < filesLength; i++)
 			{
 				File.Delete(DestDir + files[i]);
-				if(ShowProgress)
+				if(VerbosityLvl > 2 && ShowProgress)
 				{
-					WriteLine($"{i * 100 / (double)filesLength}");
+					SetCursorPosition(0, CursorTop - 1);
+					Write($"Deleting {files[i]}...");
+					WriteSpaceToLineEnd();
+					Write($"\n{i * 100 / ((double)filesLength - 1)}%");
+					WriteSpaceToLineEnd();
+				}
+				else if(ShowProgress)
+				{
+					SetCursorPosition(0, CursorTop);
+					Write($"{i * 100 / ((double)filesLength - 1)}%");
+					WriteSpaceToLineEnd();
+				}
+				else if(VerbosityLvl > 2)
+				{
+					SetCursorPosition(0, CursorTop);
+					Write($"Copying {files[i]}...");
+					WriteSpaceToLineEnd();
 				}
 			}
 		}
@@ -113,12 +185,11 @@ namespace BadSyncProgram
 			foreach(string file in Directory.GetFiles(DirectoryPath))
 			{
 				FilesInDirectory.Add(file.Substring(dirLength));
-			}
-			if(VerbosityLvl > 2)
-			{
-				foreach(string file in FilesInDirectory)
+				if(VerbosityLvl > 2)
 				{
-					WriteLine(file);
+					SetCursorPosition(0, CursorTop);
+					Write($"Found {file}...");
+					WriteSpaceToLineEnd();
 				}
 			}
 			return FilesInDirectory;
@@ -141,13 +212,25 @@ namespace BadSyncProgram
 					{
 						DoubleEntries.Add(SourceFiles[i]);
 					}
-					if(VerbosityLvl > 2)
+					if(VerbosityLvl > 2 && ShowProgress)
 					{
-						WriteLine(SourceFiles[i]);
+					SetCursorPosition(0, CursorTop - 1);
+					Write($"Checking {SourceFiles[i]}...");
+					WriteSpaceToLineEnd();
+					Write($"\n{i * 100 / ((double)SourceFilesLength - 1)}%");
+					WriteSpaceToLineEnd();
 					}
-					if(ShowProgress)
+					else if(ShowProgress)
 					{
-						WriteLine($"{i * 100 / ((double)SourceFilesLength - 1)}%");
+						SetCursorPosition(0, CursorTop);
+						Write($"{i * 100 / ((double)SourceFilesLength - 1)}%");
+						WriteSpaceToLineEnd();
+					}
+					else if(VerbosityLvl > 2)
+					{
+						SetCursorPosition(0, CursorTop);
+						Write($"Checking {SourceFiles[i]}...");
+						WriteSpaceToLineEnd();
 					}
 				}
 			}
@@ -159,13 +242,25 @@ namespace BadSyncProgram
 					{
 						DoubleEntries.Add(DestFiles[i]);
 					}
-					if(VerbosityLvl > 2)
+					if(VerbosityLvl > 2 && ShowProgress)
 					{
-						WriteLine(DestFiles[i]);
+						SetCursorPosition(0, CursorTop - 1);
+						Write($"Checking {DestFiles[i]}...");
+						WriteSpaceToLineEnd();
+						Write($"\n{i * 100 / ((double)DestFilesLength - 1)}%");
+						WriteSpaceToLineEnd();
 					}
-					if(ShowProgress)
+					else if(ShowProgress)
 					{
-						WriteLine($"{i * 100 / ((double)DestFilesLength - 1)}%");
+						SetCursorPosition(0, CursorTop);
+						Write($"{i * 100 / ((double)DestFilesLength - 1)}%");
+						WriteSpaceToLineEnd();
+					}
+					else if(VerbosityLvl > 2)
+					{
+						SetCursorPosition(0, CursorTop);
+						Write($"Checking {DestFiles[i]}...");
+						WriteSpaceToLineEnd();
 					}
 				}
 			}
@@ -262,19 +357,22 @@ namespace BadSyncProgram
 			{
 				if(VerbosityLvl > 2)
 				{
-					WriteYellowLine($"Comparing Files: \"{entry}\"");
+					SetCursorPosition(0, CursorTop);
+					Write($"Comparing {entry} ...");
 				}
 				if(!AreFilesTheSame(SourceDir + entry, DestDir + entry))
 				{
 					DoubleEntriesToCopy.Add(entry);
 					if(VerbosityLvl > 2)
 					{
-						WriteLine("Files are not the same");
+						Write("not identical");
+						WriteSpaceToLineEnd();
 					}
 				}
 				else if(VerbosityLvl > 2)
 				{
-					WriteLine("Files are the same");
+					Write("indentical");
+					WriteSpaceToLineEnd();
 				}
 			}
 			return DoubleEntriesToCopy;
