@@ -208,43 +208,51 @@ namespace BadSyncProgram
 		}
 		static void GetArgs(string[] args)
 		{
-			if(args.Length < 1)
+			try
 			{
-				WriteLine("Not enough arguments\tExiting...");
-				Environment.Exit(0);
-			}
-			if(args[0] == "-h" || args[0] == "--help")
-			{
-				ShowHelpAndExit();
-			}
-			for(int i = 0; i < args.Length; i++)
-			{
-				if(args[i].StartsWith("-"))
+				if(args.Length < 1)
 				{
-					args[i] = args[i].Substring(1);
-					foreach(char chr in args[i])
+					WriteLine("Not enough arguments\tExiting...");
+					Environment.Exit(0);
+				}
+				if(args[0] == "-h" || args[0] == "--help")
+				{
+					ShowHelpAndExit();
+				}
+				for(int i = 0; i < args.Length; i++)
+				{
+					if(args[i].StartsWith("-"))
 					{
-						switch(chr)
+						args[i] = args[i].Substring(1);
+						foreach(char chr in args[i])
 						{
-							case 'v':
-								VerbosityLvl++;
-								break;
-							case 'c':
-								CompDoubleEntries = true;
-								break;
-							case 'p':
-								ShowProgress = true;
-								break;
-							case 'd':
-								DeleteExtraFiles = true;
-								break;
-							default:
-								WriteLine($"Unknown Argument \"-{chr}\"\nExiting...");
-								Environment.Exit(0);
-								break;
+							switch(chr)
+							{
+								case 'v':
+									VerbosityLvl++;
+									break;
+								case 'c':
+									CompDoubleEntries = true;
+									break;
+								case 'p':
+									ShowProgress = true;
+									break;
+								case 'd':
+									DeleteExtraFiles = true;
+									break;
+								default:
+									WriteLine($"Unknown Argument \"-{chr}\"\nExiting...");
+									Environment.Exit(0);
+									break;
+							}
 						}
 					}
 				}
+			}
+			catch(Exception e)
+			{
+				WriteLine($"Error parsing arguments:\n{e}\nExiting...");
+				Environment.Exit(0);
 			}
 		}
 		static List<string> CompareDoubleEntries(List<string> CurrDoubleEntries)
