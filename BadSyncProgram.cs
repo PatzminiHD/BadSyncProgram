@@ -182,8 +182,36 @@ namespace BadSyncProgram
 			WriteLine(sLine);
 			ResetColor();
 		}
+		static void ShowHelpAndExit()
+		{
+			WriteLine($"{ProgramName} version {VersionString}\n");
+			WriteYellowLine("USAGE: bsprog [Source Dir] [Destination Dir] [OPTIONS]\n");
+			WriteYellowLine("Options:");
+			WriteLine("-h    Show this help and exit");
+			WriteLine("-p    Show the progress while manipulating files");
+			WriteLine("-v    Increase the verbosity Level");
+			WriteLine("-c    Compare files existing in both directories");
+			WriteLine("-d    Delete files existing in Destination Dir");
+			WriteLine("                         but not in Source Dir\n");
+			WriteYellowLine("Paths have to end with '/'");
+			WriteYellowLine("For example:\n");
+			WriteLine("bsprog /home/user/ /mnt/backup/userdir/ -p -vvv -c -d\n");
+			WriteLine("Shows the progress, compares files that exist in both directories,");
+			WriteLine("deletes files that are in Destination Dir but not in Source Dir");
+			WriteLine("and sets the verbosity Level to 3\n");
+			WriteYellowLine("Some Additional valid usages:\n");
+			WriteLine("bsprog /path/to/source/ /path/to/dest/ -pvvvcd");
+			WriteLine("bsprog /path/to/source/ /path/to/dest/ --progress --delete-extra -c -v");
+			WriteLine("bsprog /path/to/source/ /path/to/dest/");
+			Environment.Exit(0);
+
+		}
 		static void GetArgs(string[] args)
 		{
+			if(args[0] == "-h" || args[0] == "--help")
+			{
+				ShowHelpAndExit();
+			}
 			for(int i = 0; i < args.Length; i++)
 			{
 				if(args[i].StartsWith("-"))
