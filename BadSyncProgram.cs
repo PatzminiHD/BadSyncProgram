@@ -208,6 +208,11 @@ namespace BadSyncProgram
 		}
 		static void GetArgs(string[] args)
 		{
+			if(args.Length < 1)
+			{
+				WriteLine("Not enough arguments\tExiting...");
+				Environment.Exit(0);
+			}
 			if(args[0] == "-h" || args[0] == "--help")
 			{
 				ShowHelpAndExit();
