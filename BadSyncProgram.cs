@@ -307,7 +307,7 @@ namespace BadSyncProgram
 			{
 				if(args.Length < 1)
 				{
-					WriteLine("Not enough arguments\tExiting...");
+					WriteLine("Not enough arguments\nExiting...");
 					Environment.Exit(0);
 				}
 				if(args[0] == "-h" || args[0] == "--help")
