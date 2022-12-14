@@ -9,7 +9,7 @@ namespace BadSyncProgram
 	class Program
 	{
 		static string VersionString = "0.1.0";
-		static string ProgramName = "BSProgram";
+		static string ProgramName = "bsprog";
 		static int VerbosityLvl = 0;
 		static bool CompDoubleEntries = false;
 		static bool ShowProgress = false;
