@@ -385,9 +385,9 @@ namespace BadSyncProgram
 			WriteLine("Shows the progress, compares files that exist in both directories,");
 			WriteLine("deletes files that are in Destination Dir but not in Source Dir");
 			WriteLine("and sets the verbosity Level to 3\n");
-			WriteYellowLine("Some Additional valid usages:\n");
+			WriteYellowLine("Some Additional valid examples:\n");
 			WriteLine("bsprog /path/to/source/ /path/to/dest/ -pvvvcd");
-			WriteLine("bsprog /path/to/source/ /path/to/dest/ --progress --delete-extra -c -v");
+			WriteLine("bsprog /path/to/source/ /path/to/dest/ -p -d -c -v");
 			WriteLine("bsprog /path/to/source/ /path/to/dest/");
 			Environment.Exit(0);
 
