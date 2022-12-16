@@ -35,5 +35,5 @@ package() {
   cp -r $pkgname "$pkgdir/opt/$pkgname/"
   mv "$pkgdir/opt/$pkgname/BadSyncProgram" "$pkgdir/opt/$pkgname/$pkgname"
   rm "$pkgdir/opt/$pkgname/BadSyncProgram.pdb"
-  ln -s "$pkgdir/opt/$pkgname/$pkgname" "$pkgdir/usr/bin/$pkgname"
+  ln -s "/opt/$pkgname/$pkgname" "$pkgdir/usr/bin/$pkgname"
 }

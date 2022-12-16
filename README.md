@@ -14,6 +14,35 @@ To view the help page, run the program with the argument '-h'
 
 ## How to install
 
-Currently there are no options for installing, but you can build it using the dotnet sdk
+You can either download and run the PKGBUILD, or download a prebuilt binary
 
-In the future there will be a prebuilt self-contained program uploaded as a release to GitHub
+### Prebuilt binaries
+
+Prebuilt binaries can be found under [releases](https://github.com/PatzminiHD/BadSyncProgram/releases)
+
+### PKGBUILD
+
+If you are on an Arch System, you can download and run the [PKGBUILD](https://github.com/PatzminiHD/BadSyncProgram/blob/master/PKGBUILD).
+
+Before you begin, make sure you have the `base-devel` package group installed.
+
+To download and run the PKGBUILD, run 
+```
+wget https://raw.githubusercontent.com/PatzminiHD/BadSyncProgram/master/PKGBUILD
+makepkg -si
+```
+After a successful install, you can delete all the directories and files that where created using:
+
+```
+rm -rf BadSyncProgram pkg src bsprog*.pkg.tar.zst PKGBUILD
+```
+
+(You need the -f to delete the .pack files in BadSyncProgram/objects/pack/)
+
+To do all this at once run:
+
+```
+wget https://raw.githubusercontent.com/PatzminiHD/BadSyncProgram/master/PKGBUILD &&
+makepkg -si &&
+rm -rf BadSyncProgram pkg src bsprog*.pkg.tar.zst PKGBUILD
+```
