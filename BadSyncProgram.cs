@@ -8,7 +8,7 @@ namespace BadSyncProgram
 {
 	class Program
 	{
-		static string VersionString = "1.1.0";
+		static string VersionString = "1.1.1";
 		static string ProgramName = "bsprog";
 		static int VerbosityLvl = 0;
 		static bool CompDoubleEntries = false;
@@ -226,7 +226,7 @@ namespace BadSyncProgram
 		static string GetInput(string sQuestion)
 		{
 			WriteLine(sQuestion);
-			string Input = ReadLine();
+			string? Input = ReadLine();
 			while(!Directory.Exists(Input) || !Input.EndsWith("/"))
 			{
 				WriteLine("Input is not a valid directory, please try again:");
